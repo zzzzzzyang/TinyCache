@@ -2,6 +2,8 @@ package lru
 
 import "container/list"
 
+// todo 添加LFU和LRU-K
+
 type Cache struct {
 	maxBytes  int64
 	nBytes    int64
