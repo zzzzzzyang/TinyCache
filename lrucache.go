@@ -8,7 +8,7 @@ import (
 type cache struct {
 	lru        *lru.Cache
 	mu         sync.Mutex
-	cacheBytes int64
+	cacheBytes uint32
 }
 
 func (c *cache) add(key string, value ByteView) {

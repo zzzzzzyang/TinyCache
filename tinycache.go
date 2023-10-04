@@ -20,7 +20,7 @@ func (f GetterFunc) Get(key string) ([]byte, error) {
 type Group struct {
 	name      string
 	getter    Getter
-	mainCache cache
+	mainCache sharedCache
 }
 
 var (
@@ -28,7 +28,7 @@ var (
 	groups = make(map[string]*Group)
 )
 
-func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
+func NewGroup(name string, cacheBytes uint32, getter Getter) *Group {
 	if getter == nil {
 		panic("nil getter")
 	}
@@ -38,7 +38,7 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 	g := &Group{
 		name:   name,
 		getter: getter,
-		mainCache: cache{
+		mainCache: sharedCache{
 			cacheBytes: cacheBytes,
 		},
 	}
