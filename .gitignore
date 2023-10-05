@@ -1,0 +1,12 @@
+# Test binary, built with `go test -c`
+*.test
+
+# IDE
+.idea
+
+# Macos file system
+.DS_Store
+*/.DS_Store
+
+# etcd data
+#default.etcd
