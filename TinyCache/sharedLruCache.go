@@ -2,7 +2,6 @@ package TinyCache
 
 import (
 	"TinyCache/util"
-	"sync"
 )
 
 const (
@@ -11,7 +10,6 @@ const (
 )
 
 type sharedCache struct {
-	mu         []sync.Mutex
 	caches     []*cache
 	cacheBytes uint32
 }

@@ -2,7 +2,7 @@ package lru
 
 import "container/list"
 
-// todo 添加LFU和LRU-K
+// todo 添加LFU、LRU-K、ARC, 添加缓存过期时间
 
 type Cache struct {
 	maxBytes  uint32

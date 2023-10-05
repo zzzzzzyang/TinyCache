@@ -30,7 +30,7 @@ func NewMap(replicas int, fn Hash) *Map {
 func (m *Map) Add(keys ...string) {
 	for _, key := range keys {
 		for i := 0; i < m.replicas; i++ {
-			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
+			hash := int(m.hash([]byte(strconv.Itoa(i) + key))) // 这里可能会出现hash冲突
 			m.keys = append(m.keys, hash)
 			m.hashmap[hash] = key
 		}

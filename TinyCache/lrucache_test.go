@@ -52,7 +52,7 @@ func TestHTTPPool(t *testing.T) {
 			return nil, fmt.Errorf("%s not exist", key)
 		}))
 	addr := "localhost:9999"
-	peers := newHTTPPool(addr)
+	peers := NewHTTPPool(addr)
 	log.Println("tinycache is running at", addr)
 	log.Fatal(http.ListenAndServe(addr, peers))
 }
