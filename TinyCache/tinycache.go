@@ -1,6 +1,7 @@
 package TinyCache
 
 import (
+	"TinyCache/singleflight"
 	"fmt"
 	"log"
 	"sync"
@@ -22,6 +23,8 @@ type Group struct {
 	getter    Getter
 	mainCache sharedCache
 	peers     PeerPicker
+
+	loader *singleflight.Group
 }
 
 var (
@@ -49,6 +52,7 @@ func NewGroup(name string, cacheBytes uint32, getter Getter) *Group {
 		mainCache: sharedCache{
 			cacheBytes: cacheBytes,
 		},
+		loader: &singleflight.Group{},
 	}
 	groups[name] = g
 	return g
@@ -74,15 +78,21 @@ func (g *Group) Get(key string) (ByteView, error) {
 }
 
 func (g *Group) load(key string) (view ByteView, err error) {
-	if g.peers != nil {
-		if peer, ok := g.peers.PickPeer(key); ok {
-			if view, err = g.getFromPeer(peer, key); err == nil {
-				return view, nil
+	viewi, err := g.loader.Do(key, func() (interface{}, error) {
+		if g.peers != nil {
+			if peer, ok := g.peers.PickPeer(key); ok {
+				if view, err = g.getFromPeer(peer, key); err == nil {
+					return view, nil
+				}
+				log.Println("[TinyCache] Failed to get from peer", err)
 			}
-			log.Println("[TinyCache] Failed to get from peer", err)
 		}
+		return g.getLocally(key)
+	})
+	if err == nil {
+		return viewi.(ByteView), nil
 	}
-	return g.getLocally(key)
+	return
 }
 
 func (g *Group) getFromPeer(peer PeerGetter, key string) (ByteView, error) {

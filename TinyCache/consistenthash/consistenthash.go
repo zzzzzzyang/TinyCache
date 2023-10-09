@@ -12,7 +12,7 @@ type Map struct {
 	hash     Hash           // hash function
 	replicas int            // multiples of dummy node
 	keys     []int          // sorted hash ring
-	hashmap  map[int]string // hash value -> real node
+	hashmap  map[int]string // hash value -> real node’s name
 }
 
 func NewMap(replicas int, fn Hash) *Map {
